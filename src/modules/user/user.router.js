@@ -15,7 +15,7 @@ import {
     sendForgetPassword,
     getAllUser
 } from "./user.controller.js";
-import { isAuthenticated } from "../../middleware/authentication.middleware.js";
+
 
 const router = Router();
 //register

@@ -5,7 +5,7 @@ import mongoose, { model, Schema } from "mongoose";
 export const userSchema = new Schema({
     userName: {
         type: String,
-        unique: true,
+        // unique: true,
         min: 3,
         max: 20
     },

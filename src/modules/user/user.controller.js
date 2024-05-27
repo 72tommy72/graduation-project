@@ -13,8 +13,9 @@ import jwt from "jsonwebtoken";
 export const register = catchError(async (req, res, next) => {
     //data
     const { userName, email, password } = req.body;
+
     //check user
-    const isUser = await User.findOne({ email });
+    const isUser = await User.findOne({ email });       
     if (isUser) {
         return next(new Error("email is already exist"));
     }
@@ -33,7 +34,7 @@ export const register = catchError(async (req, res, next) => {
         activationCode,
     });
     //create confirmationLink
-    const link = `https://graduation-project-bay-one.vercel.app/auth/confirmEmail/${activationCode}`;
+    const link = `https://graduation-project-an7d.onrender.com/auth/confirmEmail/${activationCode}`;
     // send confirmation email
 
     const isEmailSent = await sendEmail({

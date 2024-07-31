@@ -10,12 +10,12 @@ import jwt from "jsonwebtoken";
 
 
 // register controller
-export const register = catchError(async (req, res, next) => {
+export const register = catchError(async(req, res, next) => {
     //data
     const { userName, email, password } = req.body;
 
     //check user
-    const isUser = await User.findOne({ email });       
+    const isUser = await User.findOne({ email });
     if (isUser) {
         return next(new Error("email is already exist"));
     }
@@ -23,7 +23,7 @@ export const register = catchError(async (req, res, next) => {
     const hashPassword = bcryptjs.hashSync(
         password,
         Number(process.env.SALT_ROUNDS)
-    );  
+    );
     // create confirmation link
     const activationCode = crypto.randomBytes(64).toString("hex");
     // create a new user
@@ -41,7 +41,7 @@ export const register = catchError(async (req, res, next) => {
         to: email,
         subject: "Confirmation Email",
         html: signUpTemp(link),
-        
+
     });
 
     if (!isEmailSent) {
@@ -58,14 +58,9 @@ export const register = catchError(async (req, res, next) => {
     });
 });
 // activatedAccount
-export const activatedAccount = catchError(async (req, res, next) => {
+export const activatedAccount = catchError(async(req, res, next) => {
     //find user & delete activationCode & update is confirmed
-    const user = await User.findOneAndUpdate(
-        { activationCode: req.params.activationCode },
-        { isConfirmed: true },
-        { $unset: { activationCode: 1 } },
-        { new: true }
-    );
+    const user = await User.findOneAndUpdate({ activationCode: req.params.activationCode }, { isConfirmed: true }, { $unset: { activationCode: 1 } }, { new: true });
 
     //check user
     if (!user) {
@@ -79,7 +74,7 @@ export const activatedAccount = catchError(async (req, res, next) => {
     });
 });
 //login
-export const login = catchError(async (req, res, next) => {
+export const login = catchError(async(req, res, next) => {
     //data
     const { email, password } = req.body;
 
@@ -99,8 +94,7 @@ export const login = catchError(async (req, res, next) => {
         return next(new Error("sorry password incorrect ", { cause: 404 }));
     }
     //generate token
-    let token = jwt.sign(
-        { id: user._id, email: user.email },
+    let token = jwt.sign({ id: user._id, email: user.email },
         process.env.SECRET_KEY,
         // { expiresIn: "1d" },
     );
@@ -119,13 +113,13 @@ export const login = catchError(async (req, res, next) => {
     //response
     return res.status(200).json({
         success: true,
-        message: token,
+        token,
     });
 });
 //userInfo
 // export const userInfo = catchError(async (req, res, next) => {
 //     const email = req.user.email
-    
+
 //     //check user
 //     const isUser = await User.findOne({email});
 //     if (!isUser) {
@@ -134,7 +128,7 @@ export const login = catchError(async (req, res, next) => {
 //     //data
 //     const { weight, height, vegetarian, b12, illnesses, period }
 //         = req.body; 
-    
+
 //     const user = await User.create({
 //         weight,
 //         height,
@@ -150,7 +144,7 @@ export const login = catchError(async (req, res, next) => {
 //     })
 // })
 //sendForgetPassword
-export const sendForgetPassword = catchError(async (req, res, next) => {
+export const sendForgetPassword = catchError(async(req, res, next) => {
     //data
     const { email } = req.body;
     //find user by email
@@ -168,25 +162,22 @@ export const sendForgetPassword = catchError(async (req, res, next) => {
     await user.save();
     //send mail
     return await sendEmail({
-        to: user.email,
-        subject: "reset password",
-        html: forgetCodeTemp(code),
-    })
-        ? res.status(200).json({
+            to: user.email,
+            subject: "reset password",
+            html: forgetCodeTemp(code),
+        }) ?
+        res.status(200).json({
             success: true,
             message: "reset password",
-        })
-        : next(new Error("something went wrong"));
+        }) :
+        next(new Error("something went wrong"));
 });
 // resetPassword
-export const resetPassword = catchError(async (req, res, next) => {
+export const resetPassword = catchError(async(req, res, next) => {
     let user = await User.findOne({ forgetCode: req.body.forgetCode });
     if (!user) return next(new Error("invalid code!"));
     //set new password and remove code from user's data
-    user = await User.findOneAndUpdate(
-        { email: req.body.email },
-        { $unset: { forgetCode: 1 } }
-    );
+    user = await User.findOneAndUpdate({ email: req.body.email }, { $unset: { forgetCode: 1 } });
     //hash password
     user.password = bcryptjs.hashSync(
         req.body.password,
@@ -195,17 +186,17 @@ export const resetPassword = catchError(async (req, res, next) => {
     await user.save();
     //remove code from user's field
     const tokens = await Token.find({ user: user._id });
-    tokens.forEach(async (token) => {
+    tokens.forEach(async(token) => {
         token.isValid = false;
         await token.save();
     });
 
     return res.json({ success: true, message: "Try To Login!" });
 })
-export const getAllUser = catchError(async (req, res, next) => {
-    const user = await User.find(); 
-    
+export const getAllUser = catchError(async(req, res, next) => {
+    const user = await User.find();
+
     return res.json({
-        result : user
+        result: user
     })
 })

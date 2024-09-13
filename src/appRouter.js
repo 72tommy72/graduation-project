@@ -37,11 +37,11 @@ export const appRouter = (app, express) => {
     //     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     //     next();
     // });
-    app.use(cors({
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-    }));
+    // app.use(cors({
+    //     origin: '*',
+    //     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    //     allowedHeaders: ['Content-Type', 'Authorization'],
+    // }));
     //global Routes
     app.use(express.json()) // parse data from cover to Json
 
@@ -62,17 +62,17 @@ export const appRouter = (app, express) => {
 
     //error handler
     app.use((error, req, res, next) => {
-        return res.status(error.cause || 500).json({
-            success: false,
-            message: error.message,
-            stack: error.stack
+            return res.status(error.cause || 500).json({
+                success: false,
+                message: error.message,
+                stack: error.stack
+            })
         })
-    })
-    app.use((error, req, res, next) => {
-        return res.status(error.cause || 500).json({
-            success: false,
-            message: error.message,
-            stack: error.stack
-        })
-    })
+        // app.use((error, req, res, next) => {
+        //     return res.status(error.cause || 500).json({
+        //         success: false,
+        //         message: error.message,
+        //         stack: error.stack
+        //     })
+        // })
 }

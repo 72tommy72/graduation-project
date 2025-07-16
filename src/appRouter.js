@@ -3,7 +3,8 @@ import imageAnRouter from './modules/imageAn/imageAn.router.js'
 import userChangesRouter from './modules/userChanges/userChanges.router.js'
 import userInfoRouter from './modules/userInfo/userInfo.router.js'
 import morgan from 'morgan';
-
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../docs/index.js';
 export const appRouter = (app, express) => {
     //morgan
     if (process.env.NODE_ENV === "dev") {
@@ -40,11 +41,12 @@ export const appRouter = (app, express) => {
     app.use('/userChanges', userChangesRouter)
     //APIs for userInfoRouter
     app.use('/', userInfoRouter)
-
-
+    // Swagger UI
+    app.use('/swagger-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     // Not Found Page 
     app.use('/*', (req, res, next) => {
         return next(new Error('Not Found', { cause: 404 }));
+
     })
 
     //error handler

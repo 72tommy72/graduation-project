@@ -5,7 +5,7 @@ import userInfoRouter from './modules/userInfo/userInfo.router.js'
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../docs/index.js';
-import cors from 'cors';
+// import cors from 'cors';
 
 
 export const appRouter = (app, express) => {

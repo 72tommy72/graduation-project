@@ -3,7 +3,7 @@ import { isAuthenticated } from "../../middleware/authentication.middleware.js";
 import { isValid } from "../../middleware/validation.middleware.js";
 import { changeB12, changeCategory, changeEmail, changeHeight, changeIllnesses, changeMedications, changeName, changePassword, changePeriod, changeProfileImage, changeVegetarian, changeWeight } from "./userChanges.controller.js";
 import {  changeB12Schema, changeCategorySchema, changeEmailSchema, changeHeightSchema, changeIllnessesSchema, changeMedicationsSchema, changeNameSchema, changePasswordSchema, changePeriodSchema, changeVegetarianSchema, changeWeightSchema } from "./userChanges.validation.js";
-import { fileUpload, filterObject } from "../../utils/multer.js";
+import { fileUpload, fileValidation } from "../../utils/multer.js";
 
 const router = Router();
 //name
@@ -69,7 +69,7 @@ router.patch("/changeMedications",
 //changeProfileImage
 router.patch("/profileImage",
     isAuthenticated,
-    fileUpload(filterObject.image).single("changeProfileImage"),
+    fileUpload(fileValidation.image).single("changeProfileImage"),
     changeProfileImage);
 
 export default router;

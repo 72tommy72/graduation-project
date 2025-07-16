@@ -1,5 +1,5 @@
 export const signUpTemp = (link) =>
-  `<!DOCTYPE html>
+    `<!DOCTYPE html>
 <html>
 
 <head>
@@ -154,7 +154,7 @@ export const signUpTemp = (link) =>
                 
                 `;
 export const forgetCodeTemp = (code) =>
-  `<!DOCTYPE html>
+    `<!DOCTYPE html>
 <html>
 
 <head>
@@ -305,8 +305,6 @@ export const forgetCodeTemp = (code) =>
 </body>
 
 </html>
- 
-                
 
                 
                 `;

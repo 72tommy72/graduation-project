@@ -1,21 +1,27 @@
-import multer, { diskStorage } from "multer"
+import multer, { diskStorage } from "multer";
+import { nanoid } from "nanoid/non-secure";
 
-export const filterObject = {
+export const fileValidation = {
     image: ["image/png", "image/jpg", "image/jpeg"],
-    video: ["video/mp4", "video/mpeg"]
-}
+    video: ["video/mp4", "video/mpeg"],
+};
 
-export const fileUpload = (filterArr) => {
-
+export const fileUpload = ({ folder, filetype }) => {
     const fileFilter = (req, file, cb) => {
-        if (!filterArr.includes(file.mimetype)) {
+        if (!filterObject.includes(file.mimetype)) {
             return cb(new Error("Invalid file type"), false);
         }
-        return cb(null, true)
-    }
+        return cb(null, true);
+    };
+    const storage = diskStorage({
+        destination: `uploads/${folder}`,
+        filename: (req, file, cb) => {
+            cb(null, nanoid() + "__" + file.originalname);
+        },
+    });
 
-    return multer({ storage: diskStorage({}), fileFilter })
-}
+    return multer({ storage, fileFilter });
+};
 
 // import multer from 'multer'
 // export const allowedExtensions = {

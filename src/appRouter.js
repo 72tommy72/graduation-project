@@ -5,6 +5,9 @@ import userInfoRouter from './modules/userInfo/userInfo.router.js'
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../docs/index.js';
+import cors from 'cors';
+
+
 export const appRouter = (app, express) => {
     //morgan
     if (process.env.NODE_ENV === "dev") {
@@ -30,16 +33,28 @@ export const appRouter = (app, express) => {
     //     res.setHeader('Access-Control-Allow-Private-Network', true);
     //     return next();
     // })
+    // Middleware to enable CORS
+    // app.use((req, res, next) => {
+    //     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST,Patch ,PUT, DELETE');
+    //     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    //     next();
+    // });
+    // app.use(cors({
+    //     origin: '*',
+    //     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    //     allowedHeaders: ['Content-Type', 'Authorization'],
+    // }));
     //global Routes
     app.use(express.json()) // parse data from cover to Json
 
     //APIs for user
     app.use('/auth', authRouter)
-    //APIs for imageAn
+        //APIs for imageAn
     app.use('/model', imageAnRouter)
-    //APIs for userChanges
+        //APIs for userChanges
     app.use('/userChanges', userChangesRouter)
-    //APIs for userInfoRouter
+        //APIs for userInfoRouter
     app.use('/', userInfoRouter)
     // Swagger UI
     app.use('/swagger-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -51,11 +66,17 @@ export const appRouter = (app, express) => {
 
     //error handler
     app.use((error, req, res, next) => {
-        return res.status(error.cause || 500).json({
-            success: false,
-            message: error.message,
-            stack: error.stack
+            return res.status(error.cause || 500).json({
+                success: false,
+                message: error.message,
+                stack: error.stack
+            })
         })
-    })
-
+        // app.use((error, req, res, next) => {
+        //     return res.status(error.cause || 500).json({
+        //         success: false,
+        //         message: error.message,
+        //         stack: error.stack
+        //     })
+        // })
 }
